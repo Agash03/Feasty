@@ -1,0 +1,109 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body class="bg-dark text-white" style="font-family: 'Lucida Console', 'Courier New', monospace;">
+
+<div class="container py-4">
+    <!-- Back to Cart Button -->
+    <div class="d-flex justify-content-start mb-3">
+        <a href="/menu/cart/" class="btn btn-danger">Back to Cart</a>
+    </div>
+
+    <!-- Page Title -->
+    <h2 class="text-danger fw-bold text-center mb-5">CHECKOUT PAGE</h2>
+
+    <form method="POST" action="{% url 'checkout' %}">
+        {% csrf_token %}
+        <div class="row g-5">
+            <!-- Contact Info Section -->
+            <div class="col-md-6">
+                <div class="card bg-danger text-white shadow-lg">
+                    <div class="card-header text-center">
+                        <h3 class="fw-bold">Contact Info</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li class="mb-3 d-flex justify-content-between">
+                                <strong>Name:</strong>
+                                <span>{{ request.user.first_name }} {{ request.user.last_name }}</span>
+                            </li>
+                            <li class="mb-3 d-flex justify-content-between">
+                                <strong>Email:</strong>
+                                <span>{{ request.user.email }}</span>
+                            </li>
+                            <li class="mb-3 d-flex justify-content-between">
+                                <strong>Phone:</strong>
+                                <span>{{ request.user.phone }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Summary Section -->
+            <div class="col-md-6">
+                <div class="card bg-dark text-white shadow-lg">
+                    <div class="card-header text-center">
+                        <h3 class="fw-bold">Order Summary</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Subtotal:</span>
+                            <span>₹{{ sub_total }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Handling Fee:</span>
+                            <span>₹{{ handling_fee }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>GST:</span>
+                            <span>₹{{ gst }}</span>
+                        </div>
+                        <hr class="text-secondary">
+                        <div class="d-flex justify-content-between fw-bold text-success">
+                            <span>Total:</span>
+                            <span>₹{{ total_price }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Address Selection Dropdown -->
+        <div class="mt-5 text-white">
+            <h4 class="text-warning mb-3">Select Address</h4>
+            {% if addresses %}
+                <select name="selected_address" class="form-select bg-light text-dark" required>
+                    <option value="" disabled selected>Choose an address</option>
+                    {% for address in addresses %}
+                        <option value="{{ address.id }}">
+                            {{ address.street }}, {{ address.address_line_1 }}, {{ address.address_line_2 }}, {{ address.state }}
+                        </option>
+                    {% endfor %}
+                </select>
+            {% else %}
+                <p>No addresses found. <a href="{% url 'address_create' %}" class="text-warning">Add an Address</a></p>
+            {% endif %}
+        </div>
+
+        <!-- Proceed to Payment Button -->
+        <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-primary">Proceed to Payment</button>
+        </div>
+
+        <div class="text-right mt-4">
+            <a class="btn btn-primary" href="{% url 'address_create' %}">Add Address</a>
+        </div>
+    </form>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>

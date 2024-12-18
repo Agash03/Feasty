@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="mt-5">
+    <table class="table table-bordered text-white bg-danger">
+        <thead>
+            <tr>
+                <th>UserName</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>E-Mail</th>
+                <th>Phone</th>
+                <th>Age</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in details %}
+            <tr>
+                <td>{{ data.username }}</td>
+                <td>{{ data.first_name }}</td>
+                <td>{{ data.last_name }}</td>
+                <td>{{ data.email }}</td>
+                <td>{{ data.phone }}</td>
+                <td>{{ data.age }}</td>
+                <td>●●●●●●</td>
+                <td>
+                    {% if request.user.username == data.username %}
+                        <a class="btn btn-warning text-decoration-none text-white" href="{% url 'user_update' data.id %}">Update</a>
+                    {% endif %}
+                    <a class="btn btn-danger text-decoration-none text-white" href="{% url 'user_delete' data.id %}">Delete</a>
+                </td>
+                
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<a href="{% url 'password_change' %}" class="btn btn-warning">Change Password Of current user</a>
+
+{% endblock content %}

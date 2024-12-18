@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feasty NonVeg Menu</title>
+</head>
+<body>    
+    {% block content %}
+    {% if messages %}
+    <div class="position-fixed top-0 start-50 translate-middle-x alert alert-success alert-dismissible fade show sticky-top bg-success text-white" role="alert">
+        {% for message in messages %}
+            <p class="mb-0">{{ message }}<span><a href="/menu/cart/">Go to cart</a></span></p>
+        {% endfor %}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+    <div class="container-fluid" >
+        <div class="row">
+            <!-- Left Menu -->
+            <div class="col-md-3 mt-3 sticky-top bg-light" style="height: 100vh; overflow-y: auto;">
+                <ul class="list-group shadow" style="font-family: 'Lucida Console', 'Courier New', monospace; border: none;">
+                    <li class="list-group-item bg-warning text-white text-center fw-bold"  style="border: none; height: 60px;">FEASTY MENU</li>
+                    <a href="#nv briyani" class="text-decoration-none">
+                        <li class="list-group-item text-center bg-danger text-white hover-effect" style="border: none; height: 60px;">BRIYANI</li>
+                    </a>
+                    <a href="#nv meals" class="text-decoration-none">
+                        <li class="list-group-item text-center bg-danger text-white hover-effect" style="border: none; height: 60px;">MEALS</li>
+                    </a>
+                    <a href="#nv starters" class="text-decoration-none">
+                        <li class="list-group-item text-center bg-danger text-white hover-effect" style="border: none; height: 60px;">STARTERS</li>
+                    </a>
+                    <a href="#nv fried rice" class="text-decoration-none">
+                        <li class="list-group-item text-center bg-danger text-white hover-effect" style="border: none; height: 60px;">FRIED RICE</li>
+                    </a>
+                    <a href="#nv dosa" class="text-decoration-none">
+                        <li class="list-group-item text-center bg-danger text-white hover-effect" style="border: none; height: 60px;">DOSA</li>
+                    </a>
+                    <a href="#nv rotti" class="text-decoration-none">
+                        <li class="list-group-item text-center bg-danger text-white hover-effect" style="border: none; height: 60px;">ROTTI</li>
+                    </a>
+                    <a href="#nv gravies" class="text-decoration-none">
+                        <li class="list-group-item text-center bg-danger text-white hover-effect" style="border: none; height: 60px;">GRAVIES</li>
+                    </a>
+                    <a href="#nv snacks" class="text-decoration-none">
+                        <li class="list-group-item text-center bg-danger text-white hover-effect" style="border: none; height: 60px;">SNACKS</li>
+                    </a>
+                    <img class="mx-4 mt-4" src="{% static 'assets/images/feasty_logo.png' %}" alt="Feasty Logo">
+                </ul>
+            </div>
+            
+            <!-- Right Content -->
+            <div class="col-md-9" style="overflow-y: auto; height: 100vh;">
+                {% for section in menu_sections %}
+                    {% if section.items %}
+                    <div class="text-center mb-3 border border-3 border-light bg-danger menu-section  mt-3" id="{{ section.id }}">
+                        <h1 class="fw-normal fs-4 text-warning pt-2 menu-header" style="font-family: 'Georgia', serif;">{{ section.name }}</h1>
+                    </div>
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+                        {% for item in section.items %}
+                        <div class="col">
+                            <div class="card shadow-sm bg-danger text-white h-100" id="{{ item.id }}">
+                                <img src="{{ item.picture.url }}" class="card-img-top" style="height: 250px; object-fit: cover;" alt="{{ item.name }}">
+                                <div class="card-body d-flex flex-column justify-content-start p-3">
+                                    <h5 class="card-title fw-bold text-warning">{{ item.name }}</h5>
+                                    <p class="card-text text-start mb-2">{{ item.description }}</p>
+                                    <p class="card-text fw-bold text-warning">Price: ₹{{ item.price }}</p>
+                                </div>
+                                <form method="post" action="{% url 'add_to_cart_nonveg' idnv=item.id %}#{{section.id}}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.path }}">
+                                    <button type="submit" class="btn btn-warning w-100">Add to Cart</button>
+                                </form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-center text-white">No items available in this section.</p>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+        </div>
+    </div>
+    {% endblock content %}
+</body>
+</html>

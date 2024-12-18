@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Are you sure you want to delete this address?</h2>
+  <form method="POST" class="text-white">
+    {% csrf_token %}
+    <button type="submit">Yes, Delete</button>
+  </form>
+  <a href="{% url 'address_show' %}">Cancel</a>
+{% endblock content %}
